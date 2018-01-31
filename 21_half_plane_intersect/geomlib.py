@@ -102,16 +102,19 @@ class Line(object):
         else:
             return [1, 0]
 
+    def move(self, x, y):
+        self.c = self.c+self.a*x+self.b*y
+
     def distance_to(self, point):
         return fabs(self.a * point.x + self.b * point.y + self.c ) / sqrt(self.a ** 2 + self.b ** 2)
     
-    def draw(self, clr='black', lwidth=2.0, alph=1.0, left_b = -15, right_b = 15):
+    def draw(self, clr='black', lwidth=2.0, linestyle="-", alph=1.0, left_b = -15, right_b = 15):
         x1 = left_b
         x2 = right_b
         # ax + by + c = 0
         p1 = self.get_point_for_x(x1)
         p2 = self.get_point_for_x(x2)
-        plt.plot((p1.x, p2.x), (p1.y, p2.y), 'k-', color=clr, linewidth=lwidth, alpha = alph)
+        plt.plot((p1.x, p2.x), (p1.y, p2.y), 'k-', color=clr, linewidth=lwidth, linestyle = linestyle, alpha = alph)
 
     @staticmethod
     def from_point_dir(point, direction):
@@ -136,7 +139,7 @@ class Line(object):
 class HalfPlane(Line):
     # ax + by + c <= 0
     def __init__(self, a, b, c):
-        Line.__init__(self, a,b,c)
+        Line.__init__(self, a, b, c)
 
     def __contains__(self, point):
         return self.a * point.x + self.b * point.y + self.c <= 0.000001
@@ -152,6 +155,9 @@ class HalfPlane(Line):
 
     def opposite(self):
         return HalfPlane(self.a * -1.0, self.b * -1.0, self.c * -1.0)
+
+    # def move(self, x, y):
+    #     super().move(x, y)
 
     def orientation_downright(self):
         # ax + by + c = 0
@@ -189,8 +195,8 @@ class HalfPlane(Line):
             
     def getDirection(self):
         return Point(self.a, self.b).normalize()
-            
-    def draw(self, clr='gray', lwidth = 9, alph = 0.5, left_b = -15, right_b = 15):
+
+    def draw(self, bclr = 'black', clr='gray', lwidth = 9, alph = 0.5, left_b = -15, right_b = 15):
         const = 2.5 * 30/(right_b - left_b)
         direction = self.getDirection()
         direction = Point(-direction.x, -direction.y)
@@ -199,8 +205,8 @@ class HalfPlane(Line):
         p1 = Point(p1.x + direction.x/const, p1.y + direction.y/const)
         p2 = Point(p2.x + direction.x/const, p2.y + direction.y/const)
         l = Line.from_two_points(p1, p2)
-        l.draw(clr, lwidth, alph, left_b, right_b)
-        super().draw(left_b = left_b, right_b = right_b)
+        l.draw(clr, lwidth, "-", alph, left_b, right_b)
+        super().draw(clr = bclr, left_b = left_b, right_b = right_b)
     
 
     @staticmethod
