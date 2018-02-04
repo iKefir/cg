@@ -3,6 +3,7 @@ import numpy as np
 
 from mpl_toolkits.mplot3d import Axes3D
 from pyhull.convex_hull import ConvexHull
+from ipywidgets import interact
 from geomlib import *
 
 
@@ -233,3 +234,27 @@ def draw_third_dual_transform():
     bx.plot_trisurf(X, Y, Z, alpha=0.1, triangles=triangles)
 
     plt.show()
+
+
+def visualise_moving_halfplanes():
+    A = np.array([-4, -1, -1, -0.25,   1, 0.5, 0.15])
+    B = np.array([1,   1,  1,     1,   1,   1,   -1])
+    C = np.array([5,  -5,  0,    -3, -10, -10,    0])
+    CLR = np.array(["red", "yellow", "brown", "green", "blue", "grey", "violet"])
+
+    xlb = 0
+    xrb = 10
+    ylb = 0
+    yrb = 10
+
+    ax = plt.subplot(111)
+
+    def draw_for_t(t=0):
+        ax.clear()
+        for a, b, c, clr in zip(A, B, C, CLR):
+            HalfPlane(a, b, c - t).draw(bclr=clr, left_b=xlb, right_b=yrb)
+
+        ax.axis([xlb, xrb, ylb, yrb])
+        plt.show()
+
+    interact(draw_for_t, t=(-10, 10))
