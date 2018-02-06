@@ -119,6 +119,7 @@ to_8 = test_obj(8, t_8, e_8, -2, 4)
 to_9 = test_obj(9, t_9, e_9, 0, 6)
 
 def full_test(func):
+    plt.ioff()
     test(func, to_1)
     test(func, to_2)
     test(func, to_3)
@@ -172,6 +173,7 @@ def test_point(func, to):
 
 
 def full_test_point(func):
+    plt.ioff()
     test_point(func, to_1)
     test_point(func, to_2)
     test_point(func, to_3)
